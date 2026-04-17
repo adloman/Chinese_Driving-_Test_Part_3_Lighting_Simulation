@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subject 3 Master Trainer</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #121212; color: white; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #333; }
+        
+        /* Display Area */
+        .timer-box { font-size: 60px; color: #ff9800; font-family: monospace; margin: 10px 0; }
+        #status { font-size: 28px; font-weight: bold; height: 40px; margin-bottom: 10px; }
+        .feedback-area { min-height: 120px; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; margin-bottom: 25px; border: 1px solid #444; display: flex; flex-direction: column; justify-content: center; }
+        .pinyin { font-size: 22px; color: #00d4ff; margin-bottom: 8px; }
+        .chinese { font-size: 28px; color: white; font-weight: bold; }
+
+        /* Button Grid Layout */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .column { display: flex; flex-direction: column; gap: 15px; }
+        
+        button { padding: 25px 10px; font-size: 18px; cursor: pointer; border-radius: 12px; border: none; background: #333; color: white; transition: 0.3s; font-weight: bold; border-bottom: 5px solid #000; }
+        #play-btn { background: #28a745; width: 100%; font-size: 24px; margin-bottom: 20px; border-bottom-color: #1e7e34; }
+        
+        /* Answer Classes */
+        .btn-correct { background: #28a745 !important; border-bottom-color: #1e7e34 !important; box-shadow: 0 0 20px #28a745; transform: scale(1.05); z-index: 10; }
+        .btn-wrong { background: #dc3545 !important; border-bottom-color: #a71d2a !important; box-shadow: 0 0 20px #dc3545; }
+
+        small { display: block; font-size: 12px; opacity: 0.7; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Chinese driving test part 3 lighting simulation</h1>
+    <button id="play-btn" onclick="nextQuestion()">PLAY RANDOM </button>
+    <div class="timer-box" id="timer">5.0</div>
+    <div id="status"></div>
+
+    <div class="feedback-area" id="feedback">
+        <div style="color: #555;">Press PLAY to begin</div>
+    </div>
+
+    <div class="controls">
+        <div class="column">
+            <button id="low" onclick="userChoice('low')">LOW BEAM<small>近光灯</small></button>
+            <button id="high" onclick="userChoice('high')">HIGH BEAM<small>远光灯</small></button>
+            <button id="off" onclick="userChoice('off')">TURN OFF ALL<small>关闭灯光</small></button>
+        </div>
+
+        <div class="column">
+            <button id="flash" onclick="userChoice('flash')">FLASH 2x<small>远近光交替</small></button>
+            <button id="hazard" onclick="userChoice('hazard')">HAZARD LIGHTS<small>示宽灯 + 警示灯</small></button>
+            <button id="straight" onclick="userChoice('straight')">GO STRAIGHT<small>请起步 / 直行</small></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const examData = {
+        "01_qing_kaiqi_qianzhaodeng": { ans: "low", pin: "Qǐng kāiqǐ qiánzhàodēng", cn: "请开启前照灯" },
+        "02_yu_jidongche_huiche": { ans: "low", pin: "Yǔ jīdòngchē huìchē", cn: "与机动车会车" },
+        "03_zai_you_xinhaodeng_zhixing": { ans: "low", pin: "Zài yǒu xìnhàodēng zhíxíng", cn: "在有信号灯路口直行" },
+        "04_tong_fangxiang_genche": { ans: "low", pin: "Tóng fāngxiàng jìnjùlí gēnchē", cn: "同方向近距离跟车" },
+        "05_zhaoming_lianghao_daolu": { ans: "low", pin: "Zhǎomíng liánghǎo dàolù", cn: "在照明良好的道路行驶" },
+        "06_meiyou_ludeng_zhaoming_buliang": { ans: "high", pin: "Méiyǒu lùdēng, bùliáng", cn: "没有路灯/照明不良" },
+        "07_zai_wu_zhaoming_daolu": { ans: "high", pin: "Zài wú zhǎomíng dàolù", cn: "在无照明的道路行驶" },
+        "08_tongguo_jiwan": { ans: "flash", pin: "Tōngguò jíwān", cn: "通过急弯" },
+        "09_tongguo_polu": { ans: "flash", pin: "Tōngguò pōlù", cn: "通过坡路" },
+        "10_tongguo_gongqiao": { ans: "flash", pin: "Tōngguò gǒngqiáo", cn: "通过拱桥" },
+        "11_tongguo_renxing_hengdao": { ans: "flash", pin: "Tōngguò rénxíng héngdào", cn: "通过人行横道" },
+        "12_tongguo_meiyou_xinhaodeng": { ans: "flash", pin: "Tōngguò méiyǒu xìnhàodēng", cn: "通过无信号灯路口" },
+        "13_chaoche": { ans: "flash", pin: "Chāochē", cn: "超车" },
+        "14_lubian_linshi_tingche": { ans: "hazard", pin: "Lùbiān línshí tíngchē", cn: "路边临时停车" },
+        "15_kaoshi_wancheng_guanbi": { ans: "off", pin: "Kǎoshì wánchéng, guānbì", cn: "考试完成，关闭灯光" }
+    };
+
+    let audioList = Object.keys(examData);
+    let currentKey = "";
+    let timerValue = 5.0;
+    let timerId = null;
+    let player = new Audio();
+
+    function resetButtons() {
+        document.querySelectorAll('button').forEach(btn => {
+            btn.classList.remove('btn-correct', 'btn-wrong');
+        });
+    }
+
+    function nextQuestion() {
+        resetButtons();
+        clearInterval(timerId);
+        document.getElementById('status').innerText = "";
+        document.getElementById('feedback').innerHTML = "Listening...";
+        timerValue = 5.0;
+        updateTimerDisplay();
+
+        currentKey = audioList[Math.floor(Math.random() * audioList.length)];
+        player.src = currentKey + ".mp3";
+        player.play();
+
+        timerId = setInterval(() => {
+            timerValue -= 0.1;
+            updateTimerDisplay();
+            if (timerValue <= 0) {
+                handleFinish(null); // Timeout
+            }
+        }, 100);
+    }
+
+    function updateTimerDisplay() {
+        document.getElementById('timer').innerText = Math.max(0, timerValue).toFixed(1);
+    }
+
+    function userChoice(choice) {
+        if (!currentKey) return;
+        handleFinish(choice);
+    }
+
+    function handleFinish(userChoice) {
+        clearInterval(timerId);
+        const correctAns = examData[currentKey].ans;
+        const statusEl = document.getElementById('status');
+        
+        // Show Text Info
+        document.getElementById('feedback').innerHTML = `
+            <div class="pinyin">${examData[currentKey].pin}</div>
+            <div class="chinese">${examData[currentKey].cn}</div>
+        `;
+
+        // Highlight Buttons
+        if (userChoice === correctAns) {
+            statusEl.innerText = "PASSED ✓";
+            statusEl.style.color = "#4CAF50";
+            document.getElementById(correctAns).classList.add('btn-correct');
+        } else {
+            statusEl.innerText = userChoice === null ? "TIMEOUT! ✗" : "FAILED ✗";
+            statusEl.style.color = "#f44336";
+            if (userChoice) document.getElementById(userChoice).classList.add('btn-wrong');
+            document.getElementById(correctAns).classList.add('btn-correct'); // Highlight the right one
+        }
+        currentKey = "";
+    }
+</script>
+
+</body>
+</html>
