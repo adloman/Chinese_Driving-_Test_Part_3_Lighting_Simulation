@@ -3,111 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Subject 3 Universal Trainer</title>
+    <title>Subject 3 Trainer + English</title>
     <style>
         * { box-sizing: border-box; touch-action: manipulation; }
         
         body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
             background: #121212; 
             color: white; 
             margin: 0; 
             display: flex; 
             justify-content: center; 
-            height: 100vh;
-            overflow: hidden;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container { 
-            width: 100%; 
-            max-width: 700px; 
-            padding: 15px; 
+            width: 95%; 
+            max-width: 1000px; /* Even wider for Desktop */
+            padding: 25px; 
             display: flex; 
             flex-direction: column; 
-            height: 100%;
+            background: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            height: 92vh;
         }
 
-        /* Top Section */
-        h1 { font-size: clamp(1.2rem, 4vw, 2rem); margin: 5px 0; color: #00a2ff; text-align: center; }
+        h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 0 0 10px 0; color: #00a2ff; text-align: center; }
         
         #play-btn { 
             background: #28a745; 
             color: white; 
-            font-size: clamp(1rem, 5vw, 1.5rem); 
-            padding: 15px; 
+            font-size: clamp(1.3rem, 4vw, 2rem); 
+            padding: 22px; 
             border: none; 
             border-radius: 12px; 
             cursor: pointer; 
-            border-bottom: 5px solid #1e7e34;
+            border-bottom: 6px solid #1e7e34;
             width: 100%;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            transition: 0.1s;
         }
+        #play-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
 
-        /* Status & Timer */
-        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
-        .timer-box { font-size: clamp(2.5rem, 10vw, 5rem); color: #ff9800; font-family: monospace; font-weight: bold; }
-        #status { font-size: clamp(1rem, 5vw, 1.8rem); font-weight: bold; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; margin-bottom: 10px; }
+        .timer-box { font-size: clamp(3.5rem, 15vw, 7rem); color: #ff9800; font-family: 'Courier New', monospace; font-weight: bold; }
+        #status { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: bold; }
 
-        /* Middle Feedback Area */
         .feedback-area { 
             flex-grow: 1; 
-            background: rgba(255,255,255,0.05); 
+            background: rgba(0,0,0,0.5); 
             border-radius: 15px; 
-            margin: 10px 0; 
+            margin-bottom: 20px; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
             text-align: center;
-            border: 1px solid #333;
-            padding: 10px;
+            border: 2px solid #444;
+            padding: 20px;
         }
-        .pinyin { font-size: clamp(0.9rem, 4vw, 1.4rem); color: #00d4ff; margin-bottom: 5px; }
-        .chinese { font-size: clamp(1.2rem, 6vw, 2rem); font-weight: bold; }
+        .pinyin { font-size: clamp(1rem, 3.5vw, 1.8rem); color: #00d4ff; margin-bottom: 5px; font-style: italic; }
+        .english { font-size: clamp(1.1rem, 4vw, 2rem); color: #ffcc00; margin-bottom: 10px; font-weight: 500; }
+        .chinese { font-size: clamp(1.6rem, 6vw, 3rem); font-weight: bold; color: white; }
 
-        /* Responsive Button Grid */
-        .controls { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            padding-bottom: 10px;
-        }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-        /* Computer View: 3 columns if the screen is wide enough */
-        @media (min-width: 600px) {
+        @media (min-width: 850px) {
             .controls { grid-template-columns: 1fr 1fr 1fr; }
-            .span-tablet { grid-column: span 1; }
             .off-btn { grid-column: span 3 !important; }
+            .action-btn { padding: 35px 10px; font-size: 1.5rem; }
+            .container { height: auto; min-height: 850px; }
         }
 
         .action-btn { 
-            padding: 15px 5px; 
-            font-size: clamp(0.8rem, 3vw, 1.1rem); 
-            border-radius: 10px; 
+            padding: 22px 10px; 
+            font-size: clamp(1rem, 3vw, 1.3rem); 
+            border-radius: 12px; 
             border: none; 
-            background: #333; 
+            background: #3a3a3a; 
             color: white; 
             font-weight: bold; 
-            border-bottom: 4px solid #000;
+            border-bottom: 5px solid #1a1a1a;
             cursor: pointer;
-            transition: 0.1s;
+            transition: 0.2s;
+            position: relative;
         }
+        .action-btn:hover { background: #4a4a4a; }
 
-        .btn-correct { background: #28a745 !important; border-bottom-color: #1e7e34 !important; box-shadow: 0 0 15px #28a745; }
-        .btn-wrong { background: #dc3545 !important; border-bottom-color: #a71d2a !important; box-shadow: 0 0 15px #dc3545; }
+        .btn-correct { background: #28a745 !important; border-bottom-color: #1e7e34 !important; box-shadow: 0 0 20px #28a745; }
+        .btn-wrong { background: #dc3545 !important; border-bottom-color: #a71d2a !important; box-shadow: 0 0 20px #dc3545; }
         
-        small { display: block; font-size: 0.7rem; opacity: 0.7; margin-top: 4px; }
-        .k-hint { display: none; font-size: 0.6rem; color: #777; margin-top: 2px; }
-
-        @media (min-width: 800px) { .k-hint { display: block; } }
+        small { display: block; font-size: 0.85rem; opacity: 0.8; margin-top: 5px; color: #ccc; }
+        .k-hint { position: absolute; top: 6px; left: 10px; font-size: 0.75rem; color: #777; font-family: monospace; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Foshan Lighting Master</h1>
+    <h1>Simulated Lighting Test Part 3</h1>
     
-    <button id="play-btn" onclick="nextQuestion()">START PROMPT</button>
+    <button id="play-btn" onclick="nextQuestion()">START PROMPT (Space)</button>
     
     <div class="info-row">
         <div id="status">READY</div>
@@ -115,35 +112,35 @@
     </div>
 
     <div class="feedback-area" id="feedback">
-        <div style="color: #444;">Wait for audio to finish,<br>then react within 5s!</div>
+        <div style="color: #555;">Press Start to Practice</div>
     </div>
 
     <div class="controls">
-        <button id="low" class="action-btn" onclick="userChoice('low')">LOW BEAM<small>近光灯</small><div class="k-hint">[1]</div></button>
-        <button id="high" class="action-btn" onclick="userChoice('high')">HIGH BEAM<small>远光灯</small><div class="k-hint">[2]</div></button>
-        <button id="flash" class="action-btn" onclick="userChoice('flash')">FLASH 2X<small>交替</small><div class="k-hint">[3]</div></button>
-        <button id="hazard" class="action-btn" onclick="userChoice('hazard')">HAZARDS<small>警示灯</small><div class="k-hint">[4]</div></button>
-        <button id="off" class="action-btn off-btn" style="grid-column: span 2;" onclick="userChoice('off')">ALL OFF<small>关闭灯光</small><div class="k-hint">[5]</div></button>
+        <button id="low" class="action-btn" onclick="userChoice('low')"><span class="k-hint">1</span>LOW BEAM<small>近光灯</small></button>
+        <button id="high" class="action-btn" onclick="userChoice('high')"><span class="k-hint">2</span>HIGH BEAM<small>远光灯</small></button>
+        <button id="flash" class="action-btn" onclick="userChoice('flash')"><span class="k-hint">3</span>FLASH 2X<small>交替</small></button>
+        <button id="hazard" class="action-btn" onclick="userChoice('hazard')"><span class="k-hint">4</span>HAZARDS<small>警示灯</small></button>
+        <button id="off" class="action-btn off-btn" style="grid-column: span 2;" onclick="userChoice('off')"><span class="k-hint">5</span>ALL OFF<small>关闭灯光</small></button>
     </div>
 </div>
 
 <script>
     const examData = {
-        "01_qing_kaiqi_qianzhaodeng": { ans: "low", pin: "Qǐng kāiqǐ qiánzhàodēng", cn: "请开启前照灯" },
-        "02_yu_jidongche_huiche": { ans: "low", pin: "Yǔ jīdòngchē huìchē", cn: "与机动车会车" },
-        "03_zai_you_xinhaodeng_zhixing": { ans: "low", pin: "Zài yǒu xìnhàodēng zhíxíng", cn: "有信号灯路口直行" },
-        "04_tong_fangxiang_genche": { ans: "low", pin: "Tóng fāngxiàng jìnjùlí gēnchē", cn: "同方向近距离跟车" },
-        "05_zhaoming_lianghao_daolu": { ans: "low", pin: "Zhǎomíng liánghǎo dàolù", cn: "照明良好道路行驶" },
-        "06_meiyou_ludeng_zhaoming_buliang": { ans: "high", pin: "Méiyǒu lùdēng, bùliáng", cn: "没有路灯/照明不良" },
-        "07_zai_wu_zhaoming_daolu": { ans: "high", pin: "Zài wú zhǎomíng dàolù", cn: "在无照明道路行驶" },
-        "08_tongguo_jiwan": { ans: "flash", pin: "Tōngguò jíwān", cn: "通过急弯" },
-        "09_tongguo_polu": { ans: "flash", pin: "Tōngguò pōlù", cn: "通过坡路" },
-        "10_tongguo_gongqiao": { ans: "flash", pin: "Tōngguò gǒngqiáo", cn: "通过拱桥" },
-        "11_tongguo_renxing_hengdao": { ans: "flash", pin: "Tōngguò rénxíng héngdào", cn: "通过人行横道" },
-        "12_tongguo_meiyou_xinhaodeng": { ans: "flash", pin: "Tōngguò méiyǒu xìnhàodēng", cn: "通过无信号灯路口" },
-        "13_chaoche": { ans: "flash", pin: "Chāochē", cn: "超车" },
-        "14_lubian_linshi_tingche": { ans: "hazard", pin: "Lùbiān línshí tíngchē", cn: "路边临时停车" },
-        "15_kaoshi_wancheng_guanbi": { ans: "off", pin: "Kǎoshì wánchéng, guānbì", cn: "考试完成，关闭灯光" }
+        "01_qing_kaiqi_qianzhaodeng": { ans: "low", pin: "Qǐng kāiqǐ qiánzhàodēng", mean: "Please turn on headlights", cn: "请开启前照灯" },
+        "02_yu_jidongche_huiche": { ans: "low", pin: "Yǔ jīdòngchē huìchē", mean: "Meeting another vehicle", cn: "与机动车会车" },
+        "03_zai_you_xinhaodeng_zhixing": { ans: "low", pin: "Zài yǒu xìnhàodēng zhíxíng", mean: "Go straight at traffic lights", cn: "有信号灯路口直行" },
+        "04_tong_fangxiang_genche": { ans: "low", pin: "Tóng fāngxiàng jìnjùlí gēnchē", mean: "Following vehicle (same dir)", cn: "同方向近距离跟车" },
+        "05_zhaoming_lianghao_daolu": { ans: "low", pin: "Zhǎomíng liánghǎo dàolù", mean: "Driving on well-lit road", cn: "照明良好道路行驶" },
+        "06_meiyou_ludeng_zhaoming_buliang": { ans: "high", pin: "Méiyǒu lùdēng, bùliáng", mean: "No streetlights / Poor light", cn: "没有路灯/照明不良" },
+        "07_zai_wu_zhaoming_daolu": { ans: "high", pin: "Zài wú zhǎomíng dàolù", mean: "Driving on unlit road", cn: "在无照明道路行驶" },
+        "08_tongguo_jiwan": { ans: "flash", pin: "Tōngguò jíwān", mean: "Passing sharp curve", cn: "通过急弯" },
+        "09_tongguo_polu": { ans: "flash", pin: "Tōngguò pōlù", mean: "Passing slope/hill", cn: "通过坡路" },
+        "10_tongguo_gongqiao": { ans: "flash", pin: "Tōngguò gǒngqiáo", mean: "Passing arch bridge", cn: "通过拱桥" },
+        "11_tongguo_renxing_hengdao": { ans: "flash", pin: "Tōngguò rénxíng héngdào", mean: "Passing pedestrian crossing", cn: "通过人行横道" },
+        "12_tongguo_meiyou_xinhaodeng": { ans: "flash", pin: "Tōngguò méiyǒu xìnhàodēng", mean: "Crossing with no lights", cn: "通过无信号灯路口" },
+        "13_chaoche": { ans: "flash", pin: "Chāochē", mean: "Overtaking / Passing", cn: "超车" },
+        "14_lubian_linshi_tingche": { ans: "hazard", pin: "Lùbiān línshí tíngchē", mean: "Pulling over / Temp park", cn: "路边临时停车" },
+        "15_kaoshi_wancheng_guanbi": { ans: "off", pin: "Kǎoshì wánchéng, guānbì", mean: "Exam complete, turn off lights", cn: "考试完成，关闭灯光" }
     };
 
     let audioList = Object.keys(examData);
@@ -152,9 +149,8 @@
     let timerId = null;
     let player = new Audio();
 
-    // Keyboard Support
     window.onkeydown = (e) => {
-        if (e.code === 'Space') nextQuestion();
+        if (e.code === 'Space') { e.preventDefault(); nextQuestion(); }
         if (e.key === '1') userChoice('low');
         if (e.key === '2') userChoice('high');
         if (e.key === '3') userChoice('flash');
@@ -169,8 +165,8 @@
     function nextQuestion() {
         resetButtons();
         clearInterval(timerId);
-        document.getElementById('status').innerText = "LISTENING...";
-        document.getElementById('status').style.color = "white";
+        document.getElementById('status').innerText = "LISTENING";
+        document.getElementById('status').style.color = "#00a2ff";
         document.getElementById('feedback').innerHTML = "...";
         document.getElementById('timer').innerText = "5.0";
         
@@ -178,10 +174,11 @@
         player.src = currentKey + ".mp3";
         player.play().catch(e => {
             document.getElementById('status').innerText = "AUDIO ERROR";
-            document.getElementById('feedback').innerHTML = "Missing: " + currentKey;
         });
 
         player.onended = function() {
+            document.getElementById('status').innerText = "REACT!";
+            document.getElementById('status').style.color = "#ff9800";
             timerValue = 5.0;
             timerId = setInterval(() => {
                 timerValue -= 0.1;
@@ -201,7 +198,11 @@
         player.pause();
         if (!currentKey) return;
         const correctAns = examData[currentKey].ans;
-        document.getElementById('feedback').innerHTML = `<div class="pinyin">${examData[currentKey].pin}</div><div class="chinese">${examData[currentKey].cn}</div>`;
+        document.getElementById('feedback').innerHTML = `
+            <div class="pinyin">${examData[currentKey].pin}</div>
+            <div class="english">${examData[currentKey].mean}</div>
+            <div class="chinese">${examData[currentKey].cn}</div>
+        `;
         if (userChoice === correctAns) {
             document.getElementById('status').innerText = "PASSED ✓";
             document.getElementById('status').style.color = "#4CAF50";
