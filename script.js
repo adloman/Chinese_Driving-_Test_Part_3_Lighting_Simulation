@@ -96,7 +96,7 @@ function runNext() {
     document.getElementById(`log-${current.id}`).classList.add('active-q');
 
     if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-    currentAudio = new Audio(`audio/${current.a}`);
+    currentAudio = new Audio(`audio/audio/${current.a}`);
     
     setTimeout(() => {
         currentAudio.play().then(() => {
