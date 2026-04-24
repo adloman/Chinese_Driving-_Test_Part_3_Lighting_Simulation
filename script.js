@@ -1,5 +1,5 @@
 const data = [
-    { id: 1, p: "qǐng kāiqǐ qián zhàodēng", e: "Turn on headlights", c: "on", a: "1_qing_kaiqi_qian_zhaodeng.mp3" },
+    { id: 1, p: "Qǐng kāiqǐ qián zhàodēng", e: "Turn on headlights", c: "on", a: "1_qing_kaiqi_qian_zhaodeng.mp3" },
     { id: 2, p: "Yèjiān zhíxíng tōngguò lùkǒu", e: "Go straight through intersection (Night)", c: "on", a: "2_yejian_zhixing_tongguo_lukou.mp3" },
     { id: 3, p: "Yǔ jidòngchē huìchē", e: "Meeting motor vehicle", c: "on", a: "2_yu_jidongche_huiche.mp3" },
     { id: 4, p: "Yèjiān yǔ jidòngchē huìchē", e: "Meeting motor vehicle (Night)", c: "on", a: "3_yejian_yu_jidongche_huiche.mp3" },
