@@ -1,0 +1,197 @@
+/* --- Background & F-Zero Effect --- */
+/* Feedback & Hint Animations */
+.flash-success { 
+    background: #00C851 !important; 
+    color: #fff !important; 
+    box-shadow: 0 0 20px #00C851 !important; 
+    border: none !important;
+}
+
+.pulse-dial {
+    animation: dial-glow 0.8s infinite alternate;
+    color: #00C851 !important; 
+    text-shadow: 0 0 15px #00C851;
+    font-weight: bold;
+}
+
+@keyframes dial-glow {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.5; transform: scale(1.1); }
+}
+
+/* Existing hint pulse for buttons */
+.hint-pulse {
+    animation: hint-glow 0.8s infinite alternate;
+    box-shadow: 0 0 15px #ffbb33 !important;
+}
+
+@keyframes hint-glow {
+    from { opacity: 1; }
+    to { opacity: 0.6; }
+}
+body { 
+    background: #000; 
+    color: white; 
+    font-family: 'Segoe UI', sans-serif; 
+    margin: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    bottom: 0; width: 200%; height: 50%;
+    background: repeating-linear-gradient(90deg, #111 0px, #111 50px, #222 50px, #222 100px);
+    transform: perspective(300px) rotateX(60deg);
+    animation: drive 1.5s linear infinite;
+    z-index: -1;
+    opacity: 0.2;
+}
+
+@keyframes drive {
+    from { background-position: 0 0; }
+    to { background-position: 0 100px; }
+}
+
+/* --- Layout --- */
+#game-container { position: relative; width: 1100px; height: 700px; background: rgba(34, 34, 34, 0.95); border-radius: 40px; border: 10px solid #333; display: flex; box-shadow: 0 50px 100px rgba(0,0,0,0.8); }
+
+#sidebar { width: 160px; background: #111; border-right: 2px solid #333; padding: 15px; overflow-y: auto; }
+#sidebar h4 { font-size: 0.8rem; color: #555; margin-bottom: 10px; }
+
+.audit-item { padding: 6px; font-size: 0.6rem; border-bottom: 1px solid #222; color: #444; display: flex; justify-content: space-between; }
+.active-q { background: #333; color: #ffbb33 !important; border-radius: 4px; }
+.pass-q { color: #00C851 !important; font-weight: bold; }
+.fail-q { color: #ff4444 !important; font-weight: bold; }
+
+#stage { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; position: relative; }
+
+/* --- Display & Toggles --- */
+#display { text-align: center; height: 180px; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+.hidden-text { visibility: hidden; height: 1.5rem; margin: 5px; color: #ffbb33; }
+.reveal { visibility: visible !important; }
+
+#pinyin { font-size: 1.4rem; font-weight: bold; }
+#english { font-size: 1.1rem; }
+
+.toggle-row { margin: 10px 0; }
+.btn-toggle { background: #333; color: #888; border: 1px solid #555; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; margin: 0 5px; transition: 0.2s; }
+.btn-toggle.active { background: #00C851 !important; color: white !important; border-color: #fff !important; box-shadow: 0 0 10px rgba(0, 200, 81, 0.5); }
+
+#timer-box { width: 400px; height: 8px; background: #333; border-radius: 4px; overflow: hidden; }
+#timer-bar { width: 100%; height: 100%; background: #ffbb33; }
+
+/* --- Dashboard Elements --- */
+#controls { display: flex; width: 100%; justify-content: space-around; align-items: center; padding-top: 20px; }
+.dial-wrapper { position: relative; width: 200px; height: 200px; transform: translateX(-20px); }
+.btn-round { position: absolute; width: 55px; height: 55px; border-radius: 50%; background: #333; border: 2px solid #555; cursor: pointer; color: #888; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; z-index: 5; }
+.p-off { left: 0; top: 30px; } .p-park { left: 75px; top: -20px; } .p-low { left: 150px; top: 30px; }
+
+.knob-base { position: absolute; left: 55px; top: 60px; width: 90px; height: 90px; background: #000; border-radius: 50%; border: 4px solid #333; }
+#knob { position: absolute; width: 10px; height: 45px; background: #eee; left: 40px; top: 5px; transform-origin: bottom center; transition: 0.3s; border-radius: 2px; }
+
+.stack { display: flex; flex-direction: column; gap: 15px; }
+.btn-rect { position: relative; width: 160px; padding: 20px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px #000; transition: 0.1s; }
+
+.b-high { 
+    background: #0044ff !important; 
+    color: white !important; 
+    transform: translateX(25px) translateY(-2px); 
+    border: 2px solid #4488ff !important; 
+}
+
+.on { box-shadow: 0 0 25px #4488ff !important; border-color: white !important; background: #2266ff !important; }
+/* Hazard: Dim state (Orange-Brown) */
+.b-haz { 
+    background: #442200 !important; 
+    color: #884400 !important; 
+    border: 2px solid #663300 !important; 
+}
+
+/* Hazard: Active state (Bright Amber/Orange) */
+.haz-on { 
+    background: #ff8800 !important; 
+    color: #fff !important; 
+    box-shadow: 0 0 25px #ff8800 !important; 
+    animation: blink 0.5s infinite alternate; 
+}
+
+@keyframes blink { 
+    from { opacity: 1; } 
+    to { opacity: 0.6; } 
+}
+
+.flash-primed { background: #ffbb33 !important; color: #000 !important; box-shadow: 0 0 15px #ffbb33; }
+.flash-success { background: #00C851 !important; color: #fff !important; box-shadow: 0 0 20px #00C851; }
+
+/* ERROR X LOGIC */
+.wrong-choice::after {
+    content: "✕";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: #ff4444;
+    text-shadow: 0 0 10px #000;
+    font-weight: 900;
+    pointer-events: none;
+}
+
+/* --- Mobile Fixes --- */
+@media (max-width: 900px) {
+    #game-container { width: 100vw; height: 100vh; flex-direction: column; border-radius: 0; border: none; }
+    #sidebar { width: 100%; height: 80px; border-right: none; border-top: 2px solid #333; order: 2; display: flex; overflow-x: auto; }
+    #stage { padding: 10px; }
+    .dial-wrapper { transform: scale(0.7) translateX(0); margin-top: -20px; }
+    .stack { transform: scale(0.85); }
+    #timer-box { width: 80%; }
+}
+
+/* --- Banners --- */
+.fail-banner { display: none; text-align: center; background: rgba(20, 20, 20, 0.95); border: 1px solid #f44; padding: 15px 30px; border-radius: 15px; z-index: 100; }
+.fail-title { font-size: 2rem; color: #f44; margin: 0; }
+.crooked-letter { display: inline-block; transform: rotate(-15deg) translateY(4px); }
+.hint-pulse { animation: pulse-correct 0.7s infinite; border: 3px solid #00C851 !important; }
+@keyframes pulse-correct { 50% { transform: scale(1.05); box-shadow: 0 0 30px #00C851; } }
+
+.overlay-screen { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index: 1000; display: flex; align-items:center; justify-content:center; }
+.start-btn { padding: 25px 60px; font-size: 1.5rem; background:#00C851; color:white; border:none; border-radius:50px; cursor:pointer; }
+/* The "Forgot to turn this knob" reminder */
+.pulse-dial {
+    animation: dial-glow 0.8s infinite alternate;
+    color: #00C851 !important; 
+    text-shadow: 0 0 15px #00C851;
+    font-weight: bold;
+}
+
+@keyframes dial-glow {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.5; transform: scale(1.1); }
+}
+/* --- New Selection & Feedback Classes --- */
+
+/* Initial start state & selected state for Low Beam */
+.initial-on, .p-low.active-dial {
+    background: #ffbb33 !important;
+    color: black !important;
+    box-shadow: 0 0 15px #ffbb33;
+}
+
+/* Persistent Orange for Park when selected */
+.p-park.active-dial { 
+    background: #ff8800 !important; 
+    color: white !important; 
+    box-shadow: 0 0 15px #ff8800; 
+}
+
+/* Green Correct State (highest priority) */
+.correct-glow {
+    background: #00C851 !important;
+    color: white !important;
+    box-shadow: 0 0 25px #00C851 !important;
+    border-color: #fff !important;
+}
